@@ -20,13 +20,13 @@ $urlseactd = "https://raw.githubusercontent.com/mensaco/HotmailManagerBlacklists
 $urlsctd = "https://raw.githubusercontent.com/mensaco/HotmailManagerBlacklists/main/subject.contains.to.delete"
 
 $response = Invoke-WebRequest -Uri $urlseantd -UseDefaultCredentials 
-$sendersToDelete = $response.Content -split '`n'
+$sendersToDelete = $response.Content.Split("`n")
 
 $response = Invoke-WebRequest -Uri $urlseactd -UseDefaultCredentials 
-$sendersContainsToDelete = $response.Content -split '`n'
+$sendersContainsToDelete = $response.Content.Split("`n")
 
 $response = Invoke-WebRequest -Uri $urlsctd -UseDefaultCredentials 
-$subjectContainsToDelete = $response.Content -split '`n'
+$subjectContainsToDelete = $response.Content.Split("`n")
 
 Connect-MgGraph -Scopes $scooes
 
@@ -45,7 +45,7 @@ $response.value | ForEach-Object {
         $idstodelete += $_.id
     }
 
-    foreach($contains in $sendersContainsToDelete){
+    foreach($contains in $sendersContainsToDelete)  {
         if($null -ne $_.from.emailAddress.address -and $_.sender.emailAddress.address.ToLower().Contains($contains.toLower())){
             $deleting = $true
             $idstodelete += $_.id
