@@ -32,7 +32,7 @@ Connect-MgGraph -Scopes $scooes
 
 $response = Invoke-MgGraphRequest -Method GET $url
 
-$idstodelete = @()
+$idstodelete = New-Object "System.Collections.Generic.HashSet[string]"
 
 $response.value | ForEach-Object {
 
@@ -42,17 +42,17 @@ $response.value | ForEach-Object {
     
     if($sendersToDelete.ToLower().Contains($_.sender.emailAddress.name.ToLower())) {
         $deleting = $true
-        $idstodelete += $_.id
+        $idstodelete.Add($_.id)
     }
 
     foreach($contains in $sendersContainsToDelete)  {
         if($null -ne $_.from.emailAddress.address -and $_.sender.emailAddress.address.ToLower().Contains($contains.toLower())){
             $deleting = $true
-            $idstodelete += $_.id
+            $idstodelete.Add($_.id)
         }
         if($null -ne $_.from.emailAddress.name -and $_.sender.emailAddress.name.ToLower().Contains($contains.toLower())){
             $deleting = $true
-            $idstodelete += $_.id
+            $idstodelete.Add($_.id)
         }
 
     }
@@ -61,7 +61,7 @@ $response.value | ForEach-Object {
     foreach ($contains in $subjectContainsToDelete) {
         if($null -ne $_.subject -and $_.subject.ToLower().Contains($contains.toLower())){
             $deleting = $true
-            $idstodelete += $_.id
+            $idstodelete.Add($_.id)
         }
     }
 
@@ -75,17 +75,6 @@ $response.value | ForEach-Object {
 }
 
 
-
-
-$idstodelete | ForEach-Object {
-    $messageId = $_
-    #$messageId
-    # A UPN can also be used as -UserId.
+foreach ($messageId in $idstodelete) {
     Move-MgUserMessage  -UserId $userId -MessageId $messageId -BodyParameter $params
 }
-
-
-
-# $dummy = 0
-
-# Write-Host "OK"
