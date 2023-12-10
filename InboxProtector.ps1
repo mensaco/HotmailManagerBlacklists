@@ -19,14 +19,19 @@ $urlseantd = "https://raw.githubusercontent.com/mensaco/HotmailManagerBlacklists
 $urlseactd = "https://raw.githubusercontent.com/mensaco/HotmailManagerBlacklists/main/sender.emailAddress.address.contains.to.delete?v=$([System.DateTime]::Now.Millisecond)"
 $urlsctd = "https://raw.githubusercontent.com/mensaco/HotmailManagerBlacklists/main/subject.contains.to.delete?v=$([System.DateTime]::Now.Millisecond)"
 
-$response = Invoke-WebRequest -Uri $urlseantd -UseDefaultCredentials 
-$sendersToDelete = $response.Content.Split("`n", [StringSplitOptions]::RemoveEmptyEntries)
+# $response = Invoke-WebRequest -Uri $urlseantd -UseDefaultCredentials 
+# $sendersToDelete = $response.Content.Split("`n", [StringSplitOptions]::RemoveEmptyEntries)
 
-$response = Invoke-WebRequest -Uri $urlseactd -UseDefaultCredentials 
-$sendersContainsToDelete = $response.Content.Split("`n", [StringSplitOptions]::RemoveEmptyEntries)
+# $response = Invoke-WebRequest -Uri $urlseactd -UseDefaultCredentials 
+# $sendersContainsToDelete = $response.Content.Split("`n", [StringSplitOptions]::RemoveEmptyEntries)
 
-$response = Invoke-WebRequest -Uri $urlsctd -UseDefaultCredentials 
-$subjectContainsToDelete = $response.Content.Split("`n", [StringSplitOptions]::RemoveEmptyEntries)
+# $response = Invoke-WebRequest -Uri $urlsctd -UseDefaultCredentials 
+# $subjectContainsToDelete = $response.Content.Split("`n", [StringSplitOptions]::RemoveEmptyEntries)
+
+$sendersToDelete = Get-Content .\sender.emailAddress.name.to.delete -Encoding utf8
+$sendersContainsToDelete  = Get-Content .\sender.emailAddress.address.contains.to.delete -Encoding utf8
+$subjectContainsToDelete  = Get-Content .\subject.contains.to.delete -Encoding utf8
+
 
 Connect-MgGraph -Scopes $scooes
 
