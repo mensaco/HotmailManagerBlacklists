@@ -63,6 +63,7 @@ $response.value | ForEach-Object {
     }
 
 
+
     foreach ($contains in $subjectContainsToDelete) {
         if($null -ne $_.subject -and $_.subject.ToLower().Contains($contains.toLower())){
             $deleting = $true
